@@ -1,7 +1,7 @@
-#include <stdlib.h>
-#include <math.h>
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include <omp.h>
 
 double x(int i);                    
@@ -10,8 +10,8 @@ double exactSolution(double x, double y);
 double S(double x, double y);                 
 
 double a = 0.0, b=1.0, c = 0.0, d = 1.0;
-const int m=100;
-const int n=100;
+const int m=150;
+const int n=150;
 
 double tolerance=1E-15;
 int maxIterations=1000000;

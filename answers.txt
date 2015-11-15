@@ -1,1 +1,7 @@
 1) 
+
+3 a) twoD.cpp
+  b) Max Error <= 5E-3 for m = 100, n = 100
+  c) twoD_parallel.cpp
+  d) Verified in test.cpp
+

@@ -2,6 +2,7 @@
 #include <math.h>
 #include <iostream>
 #include <stdio.h>
+#include <omp.h>
 
 double x(int i);                    
 double y(int i);
@@ -20,6 +21,7 @@ double dy=(d-c)/(n-1);
 
 double Un  [m][n];
 double Unp1[m][n];
+double error[m][n];
 
 int main(int argc, char* argv[])
 {
@@ -53,6 +55,7 @@ int main(int argc, char* argv[])
     while(iterationError > tolerance && iterations < maxIterations){
         iterations++; // 
         // if(iterations % 1000 == 0) std::cout<<"iteration " << iterations << std::endl;
+#pragma omp parallel for num_threads(numThreads)
         for(int i=1; i< m-1; i++){
             for (int j = 1; j < n -1; j++) {
 
@@ -63,17 +66,19 @@ int main(int argc, char* argv[])
         }
         iterationError=0.0;
         // Calculate diff between Un, Up+1
-// Testing revealed it was faster to *NOT* parallelize this loop.
+#pragma omp parallel for num_threads(numThreads)
         for(int i = 0; i< m; i++){
             for (int j = 0; j < n; j++) {
-                double localError = fabs(Unp1[i][j] - Un[i][j]);
-                {
-                    iterationError = (localError > iterationError ? localError : iterationError);
+                error[i][j] = fabs(Unp1[i][j] - Un[i][j]);
 
                 }
-             }
+         }
+        for (int i = 0; i<m; i++)
+            for (int j = 0; j <n; j++)
+                iterationError = (iterationError > error[i][j] ? iterationError : error[i][j]);
+
             
-        }
+        
 // Testing revealed it was faster to *NOT* parallelize this loop.
         for(int i=0; i < m; i++){
             for (int j = 0; j < n; j++) { 
@@ -83,7 +88,9 @@ int main(int argc, char* argv[])
 
         // if(iterations % 1000 == 0) std::cout<< "The error between two iterates is " << iterationError << std::endl;
     }
+
     double time2 = omp_get_wtime();
+
     double solution_error=0.0;
     for(int i = 0; i < m; i++){
         for (int j = 0; j < n; j++) {
