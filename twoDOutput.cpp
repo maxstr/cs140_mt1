@@ -109,9 +109,14 @@ int main(int argc, char* argv[])
 
     std::ofstream outputFile;
     outputFile.open("output.csv");
-    for (int i = 0; i < m; i++)
-        for (int j = 0; j < n; j++)
+    std::ofstream outputExact;
+    outputExact.open("outputExact.csv");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
             outputFile << x(i) << ',' << y(j) << ',' << Unp1[i][j] << std::endl; 
+            outputExact << x(i) << ',' << y(j) << ',' << exactSolution(x(i), y(j)) << std::endl; 
+        }
+    }
     return 0;
 }
 double exactSolution(double x, double y) {
