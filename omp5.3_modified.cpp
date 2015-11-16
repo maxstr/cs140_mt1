@@ -88,7 +88,7 @@ double f(double x) {
 double Trap(double a, double b, int n, int thread_count) {
    double  h, approx;
    int  i;
-   int* iters = malloc(n*sizeof(int));
+   int* iters = (int *) malloc(n*sizeof(int));
    
    h = (b-a)/n; 
    approx = (f(a) + f(b))/2.0; 

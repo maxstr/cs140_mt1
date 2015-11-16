@@ -1,4 +1,22 @@
-1) 
+1) Default assignment using icpc is the same as static, n/threads where N is the number
+of iterations.
+
+Guided assignments are assigned to each thread as n/2 iterations where n is
+the number of iterations remaining. When a thread finishes its chunk, it gets
+another that is again n/2, so the size of the chunks decreases.
+If you set a chunksize, that chunksize is the minimum size that will be
+assigned. eg if n/2 is less than the chunksize, the size will be set to the
+minimum of the chunksize or however many iterations are remaining.
+
+2) In both cases it is impossible for there to be a false share because the
+memory that thread 0 and thread 2 process or thread 0 and thread 3 process do
+not overlap. For example, we have 4 threads and each is assigned to 2000
+values of y. Thread 0 is processing y[0-1999] and thread 2 is processing
+[4000-5999]. Because y is contiguous memory and a cache line is 8 doubles
+long, there is no such cache line that will contain an element thread 0 is
+processing and also an element that thread 2 is processing. Thread 0 will
+overlap at most to y[2007]. Similarly for thread 3, thread 0 can overlap at 
+most to y[2007], but 3 processes starting at y[6000]. 
 
 3 a) twoD.cpp
   b) Max Error <= 5E-3 for m = 100, n = 100
